@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBKR9EWOColziG3HlHMf86uD4Yzuttij9U",
+            authDomain: "flashcardgenorator.firebaseapp.com",
+            projectId: "flashcardgenorator",
+            storageBucket: "flashcardgenorator.appspot.com",
+            messagingSenderId: "502193064122",
+            appId: "1:502193064122:web:356010ac13a051413b9a83"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+
+        // Initialize Firestore
+        var db = firebase.firestore();
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            var username = document.querySelector('input[name="username"]').value;
+            var password = document.querySelector('input[name="password"]').value;
+
+            // Firebase Authentication
+            firebase.auth().signInWithEmailAndPassword(username, password)
+                .then((userCredential) => {
+                    // Signed in
+                    var user = userCredential.user;
+                    console.log(user);
+                    window.location.href = "success.html";
+                })
+                .catch((error) => {
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.error(errorCode, errorMessage);
+                    alert("Incorrect username or password. Please try again.");
+                });
+        }
+
+        // Microsoft login function
+        function signInWithMicrosoft() {
+            var provider = new firebase.auth.OAuthProvider('microsoft.com');
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    console.log(result.user);
+                    window.location.href = "success.html";
+                }).catch((error) => {
+                    console.error(error);
+                });
+        }
+
+        // Apple login function
+        function signInWithApple() {
+            var provider = new firebase.auth.OAuthProvider('apple.com');
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    console.log(result.user);
+                    window.location.href = "success.html";
+                }).catch((error) => {
+                    console.error(error);
+                });
+        }
+    </script>
+</head>
+<body>
+    <div class="login-form">
+        <h1>Login</h1>
+        <div class="container">
+            <div class="main">
+                <div class="content">
+                    <form onsubmit="handleFormSubmit(event)">
+                        <input type="text" name="username" placeholder="username" autofocus="">
+                        <input type="password" name="password" placeholder="password" autofocus="">
+                        <button class="btn" type="submit">Login</button>
+                    </form>
+            
+                    <div class="input">
+                        <button id='google-login-btn' class="google-button">
+                            <img src="https://banner2.cleanpng.com/20180423/gkw/kisspng-google-logo-logo-logo-5ade7dc753b015.9317679115245306313428.jpg" alt="Google Logo" class="google-logo"> Login With Google
+                        </button>
+                    </div>
+
+                  
+
+                    <div class="form-img">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="leaderboard">
+            <!-- Leaderboard will be dynamically populated -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('google-login-btn').addEventListener('click', function() {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    console.log(result.user);
+                    window.location.href = "success.html";
+                }).catch((error) => {
+                    console.error(error);
+                });
+        });
+    </script>
+</body>
+</html>

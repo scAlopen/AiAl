@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Flashcard Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>AI Flashcard Generator</h1>
+
+    <!-- Flashcard Section -->
+    <div class="flashcard-section">
+        <h2>Generate Flashcards</h2>
+        <input type="file" id="fileInput" accept=".txt">
+        <textarea id="textInput" placeholder="Paste your notes here..."></textarea>
+        <button onclick="generateFlashcards()">Generate Flashcards</button>
+        
+        <!-- Navigation Buttons -->
+        <div id="navigation" class="navigation" style="display: none;">
+            <button id="prevButton" onclick="prevFlashcard()">Previous</button>
+            <button id="nextButton" onclick="nextFlashcard()">Next</button>
+        </div>
+        
+        <!-- Flashcard Display Area -->
+        <div id="flashcardDisplay" class="flashcard-display"></div>
+    </div>
+
+    <!-- AI Enhancement Section -->
+    <div class="ai-section">
+        <h2>AI-Enhanced Notes</h2>
+        <textarea id="aiTextInput" placeholder="Paste your notes here for AI suggestions..."></textarea>
+        <button onclick="enhanceNotes()">Enhance Notes</button>
+        <div id="aiOutput" class="ai-output"></div>
+    </div>
+</div>
+
+<script>
+    let flashcards = [];
+    let currentIndex = 0;
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('textInput').value = e.target.result;
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    function generateFlashcards() {
+        const textInput = document.getElementById('textInput').value;
+        const flashcardDisplay = document.getElementById('flashcardDisplay');
+
+        // Clear previous flashcards
+        flashcardDisplay.innerHTML = '';
+        flashcards = [];
+
+        const lines = textInput.split('.').map(line => line.trim()).filter(line => line.length > 0);
+        flashcards = lines.map((line, index) => {
+            return {
+                question: `Question ${index + 1}: ${line.split(' ').slice(0, 5).join(' ')}...?`,
+                answer: `Answer: ${line}`
+            };
+        });
+
+        if (flashcards.length > 0) {
+            document.getElementById('navigation').style.display = 'block';
+            currentIndex = 0;
+            displayFlashcard(currentIndex);
+        } else {
+            document.getElementById('navigation').style.display = 'none';
+        }
+    }
+
+    function displayFlashcard(index) {
+        const flashcardDisplay = document.getElementById('flashcardDisplay');
+        const card = flashcards[index];
+
+        flashcardDisplay.innerHTML = `
+            <div class="flashcard">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">${card.question}</div>
+                    <div class="flashcard-back">${card.answer}</div>
+                </div>
+            </div>
+        `;
+
+        const flashcardElement = flashcardDisplay.querySelector('.flashcard');
+        flashcardElement.addEventListener('click', () => {
+            flashcardElement.classList.toggle('flipped');
+        });
+
+        document.getElementById('prevButton').disabled = index === 0;
+        document.getElementById('nextButton').disabled = index === flashcards.length - 1;
+    }
+
+    function prevFlashcard() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            displayFlashcard(currentIndex);
+        }
+    }
+
+    function nextFlashcard() {
+        if (currentIndex < flashcards.length - 1) {
+            currentIndex++;
+            displayFlashcard(currentIndex);
+        }
+    }
+
+    // Function to simulate AI-enhanced note generation
+    function enhanceNotes() {
+        const aiTextInput = document.getElementById('aiTextInput').value;
+        const aiOutput = document.getElementById('aiOutput');
+        
+        // Simulating AI by appending extra content to the notes
+        const enhancedText = `${aiTextInput}\n\nAI Suggestion: Don't forget to study the key concepts mentioned above!`;
+        aiOutput.innerText = enhancedText;
+    }
+</script>
+
+</body>
+</html>
