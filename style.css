@@ -1,180 +1,149 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-
-* {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+:root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --secondary-color: #ffffff;
+    --background-color: #f8f9fa;
+    --text-color: #343a40;
+    --border-radius: 8px;
+    --font-family: 'Roboto', sans-serif;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 body {
-    display: flex;
-    justify-content: flex-end; /* Align the content to the right */
-    align-items: center;
-    min-height: 100vh;
-    margin: 0; /* Ensure no default margin is applied */
-    background: url('images/bg.jpg') no-repeat center center; /* Background image */
-    background-size: cover; /* Cover the entire viewport */
-    background-attachment: fixed; /* Fix the background so it doesn't scroll */
-    animation: fadeInAnimation 1s ease-in-out forwards;
-    padding: 0 20px; /* Optional: Add some padding to the sides */
+    font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
-@keyframes fadeInAnimation {
-    0% {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.login-form {
-    background: #fff;
-    padding: 20px; /* Increased padding for better spacing */
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align items to the left within the form */
-    width: 400px; /* Set a specific width for the form */
-    max-width: 18%;
-}
-
-.login-form h1 {
-    font-size: 2.5rem;
-    font-weight: 100000;
-    color: #000000;
-    margin-bottom: 10px;
-}
-
-.login-form h2 {
-    font-size: 1.5rem;
-    font-weight: 9000;
-    color: #272346;
-    margin-bottom: 20px;
-    text-align: left; /* Align the heading to the left */
-}
-
-.login-form .main {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+.container {
     width: 100%;
-}
-
-.content {
-    flex: 1;
+    max-width: 800px;
+    margin: auto;
     padding: 20px;
 }
 
-.form-img {
-    flex: 1;
-    background: url('bg.png') center/cover;
-    border-radius: 8px;
-    height: 100%;
+h1, h2 {
+    color: var(--text-color);
+    font-weight: 500;
 }
 
-.form-img img {
-    max-width: 100%;
-    display: block;
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: background-color 0.3s, border-color 0.3s;
 }
 
-p {
-    color: #666;
-    font-size: 16px;
-    line-height: 25px;
-    opacity: 0.6;
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+.btn-outline-secondary {
+    color: var(--text-color);
+    border-color: #ddd;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #f0f0f0;
+    border-color: var(--primary-color);
+}
+
+.form-control {
+    margin-bottom: 1rem;
+}
+
+.shadow {
+    box-shadow: var(--box-shadow);
+}
+
+.flashcard-display {
     text-align: center;
+    margin-top: 20px;
 }
 
-.btn,
-button,
-input {
-    border-radius: 35px;
-    border: none;
-    padding: 14px 20px;
-    font-size: 1em;
+.flashcard {
+    perspective: 1000px;
+    margin: 0 auto;
+    max-width: 300px;
 }
 
-.btn:hover,
-button:hover {
-    background-color: #f1f1f1;
-    color: #333;
-    border-color: #333;
-}
-
-a {
-    color: #ffffff;
-    text-decoration: none;
-}
-
-.login-form form {
-    margin: 30px 0;
-    display: flex;
-    flex-direction: column;
+.flashcard-inner {
+    position: relative;
     width: 100%;
+    height: 200px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    cursor: pointer;
 }
 
-.login-form input {
-    outline: none;
-    margin-bottom: 15px;
-    padding: 14px 20px;
-    font-size: 1em;
-    color: #999;
-    background: #f7fafc;
-    transition: 0.3s ease;
-    border: 1px solid transparent;
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
 }
 
-.login-form input:focus {
-    background-color: #f1f1f1;
-    color: #333;
-    border-color: #333;
-}
-
-.login-form button,
-.google-button {
+.flashcard-front, .flashcard-back {
+    position: absolute;
     width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
     justify-content: center;
-    padding: 10px 20px;
-    background-color: #ffffff;
-    color: #757575;
-    border: 1px solid #757575;
-    border-radius: 4px;
+    padding: 20px;
+    font-size: 18px;
+    border-radius: var(--border-radius);
+}
+
+.flashcard-front {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 1px solid #ddd;
+}
+
+.flashcard-back {
+    background-color: var(--primary-color);
+    color: #fff;
+    transform: rotateY(180deg);
+    border: 1px solid var(--primary-hover);
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.navigation button {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 1em;
-    margin-top: 10px;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    font-size: 16px;
 }
 
-p.account a {
-    text-decoration: underline;
+.navigation button:disabled {
+    background-color: #ddd;
+    cursor: not-allowed;
 }
 
-.google-button img.google-logo {
-    height: 20px;
-    width: 20px;
-    margin-right: 8px;
+.ai-output {
+    background: var(--secondary-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--box-shadow);
+    border: 1px solid #ddd;
 }
 
-.google-button i {
-    margin-right: 8px;
-}
+@media (max-width: 600px) {
+    .social-login {
+        flex-direction: column;
+        width: 100%;
+    }
 
-.google-logo {
-    width: 20px;
-    height: 20px;
-    margin-right: 8px;
-}
-
-.google-button:hover {
-    background-color: #f1f1f1;
-    color: #333;
-    border-color: #333;
+    .container {
+        padding: 10px;
+    }
 }
