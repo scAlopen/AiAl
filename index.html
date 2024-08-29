@@ -3,123 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Firebase SDK -->
+    <title>AI Flashcard Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-analytics.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script>
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBKR9EWOColziG3HlHMf86uD4Yzuttij9U",
-            authDomain: "flashcardgenorator.firebaseapp.com",
-            projectId: "flashcardgenorator",
-            storageBucket: "flashcardgenorator.appspot.com",
-            messagingSenderId: "502193064122",
-            appId: "1:502193064122:web:356010ac13a051413b9a83"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
-
-        // Initialize Firestore
-        var db = firebase.firestore();
-
-        function handleFormSubmit(event) {
-            event.preventDefault();
-            var username = document.querySelector('input[name="username"]').value;
-            var password = document.querySelector('input[name="password"]').value;
-
-            // Firebase Authentication
-            firebase.auth().signInWithEmailAndPassword(username, password)
-                .then((userCredential) => {
-                    // Signed in
-                    var user = userCredential.user;
-                    console.log(user);
-                    window.location.href = "success.html";
-                })
-                .catch((error) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.error(errorCode, errorMessage);
-                    alert("Incorrect username or password. Please try again.");
-                });
-        }
-
-        // Microsoft login function
-        function signInWithMicrosoft() {
-            var provider = new firebase.auth.OAuthProvider('microsoft.com');
-            firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                    console.log(result.user);
-                    window.location.href = "success.html";
-                }).catch((error) => {
-                    console.error(error);
-                });
-        }
-
-        // Apple login function
-        function signInWithApple() {
-            var provider = new firebase.auth.OAuthProvider('apple.com');
-            firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                    console.log(result.user);
-                    window.location.href = "success.html";
-                }).catch((error) => {
-                    console.error(error);
-                });
-        }
-    </script>
+    <script src="main.js" defer></script>
 </head>
 <body>
-    <div class="login-form">
-        <h1>Login</h1>
-        <div class="container">
-            <div class="main">
-                <div class="content">
-                    <form onsubmit="handleFormSubmit(event)">
-                        <input type="text" name="username" placeholder="username" autofocus="">
-                        <input type="password" name="password" placeholder="password" autofocus="">
-                        <button class="btn" type="submit">Login</button>
-                    </form>
-            
-                    <div class="input">
-                        <button id='google-login-btn' class="google-button">
-                            <img src="https://banner2.cleanpng.com/20180423/gkw/kisspng-google-logo-logo-logo-5ade7dc753b015.9317679115245306313428.jpg" alt="Google Logo" class="google-logo"> Login With Google
-                        </button>
-                    </div>
-
-                  
-
-                    <div class="form-img">
-                        
-                    </div>
-                </div>
+    <!-- Login Section -->
+    <section id="login-section" class="container d-flex flex-column align-items-center mt-5">
+        <h1 class="mb-4">Login</h1>
+        <form id="login-form" class="w-100 p-4 shadow rounded bg-white" onsubmit="handleFormSubmit(event)" style="max-width: 400px;">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username" aria-label="Username" required>
             </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="Password" aria-label="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+        <div class="social-login mt-3">
+            <button id="google-login-btn" class="btn btn-outline-secondary w-100 mb-2 d-flex align-items-center justify-content-center">
+                <img src="https://img.icons8.com/ios/50/000000/google-logo.png" alt="Google Logo" class="social-logo me-2"> Login with Google
+            </button>
+            <button id="microsoft-login-btn" class="btn btn-outline-secondary w-100 mb-2 d-flex align-items-center justify-content-center">
+                <i class="fab fa-microsoft me-2"></i> Login with Microsoft
+            </button>
+            <button id="apple-login-btn" class="btn btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
+                <i class="fab fa-apple me-2"></i> Login with Apple
+            </button>
         </div>
-    </div>
+    </section>
 
-    <div class="container">
-        <div id="leaderboard">
-            <!-- Leaderboard will be dynamically populated -->
+    <!-- Flashcard Generator Section -->
+    <section id="flashcard-section" class="container d-none mt-5">
+        <h1 class="text-center mb-4">AI Flashcard Generator</h1>
+        <div class="flashcard-section shadow rounded p-4 bg-white mb-5">
+            <h2 class="text-center mb-3">Generate Flashcards</h2>
+            <input type="file" id="fileInput" class="form-control mb-3" accept=".txt" aria-label="Upload your notes as a text file">
+            <textarea id="textInput" class="form-control mb-3" placeholder="Paste your notes here..." aria-label="Text input for notes"></textarea>
+            <button onclick="generateFlashcards()" class="btn btn-primary w-100">Generate Flashcards</button>
+
+            <!-- Navigation Buttons -->
+            <div id="navigation" class="navigation mt-4 d-none">
+                <button id="prevButton" class="btn btn-outline-primary me-2" onclick="prevFlashcard()">Previous</button>
+                <button id="nextButton" class="btn btn-outline-primary" onclick="nextFlashcard()">Next</button>
+            </div>
+
+            <!-- Flashcard Display Area -->
+            <div id="flashcardDisplay" class="flashcard-display mt-3 text-center"></div>
         </div>
-    </div>
 
-    <script>
-        document.getElementById('google-login-btn').addEventListener('click', function() {
-            var provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider)
-                .then((result) => {
-                    console.log(result.user);
-                    window.location.href = "success.html";
-                }).catch((error) => {
-                    console.error(error);
-                });
-        });
-    </script>
+        <!-- AI Enhancement Section -->
+        <div class="ai-section shadow rounded p-4 bg-white">
+            <h2 class="text-center mb-3">AI-Enhanced Notes</h2>
+            <textarea id="aiTextInput" class="form-control mb-3" placeholder="Paste your notes here for AI suggestions..." aria-label="AI input for enhancing notes"></textarea>
+            <button onclick="enhanceNotes()" class="btn btn-primary w-100">Enhance Notes</button>
+            <div id="aiOutput" class="ai-output mt-3 p-3 border rounded bg-light"></div>
+        </div>
+    </section>
 </body>
 </html>
